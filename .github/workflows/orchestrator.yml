@@ -1,0 +1,38 @@
+name: Central Release Orchestrator
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Which service to release?"
+        required: true
+        type: choice
+        options:
+          - repo1
+          - repo2
+          - both
+      ref:
+        description: "Git ref (branch, tag, or commit SHA)"
+        required: true
+        default: "main"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  repo1:
+    name: Release Backend (repo1)
+    if: ${{ inputs.service == 'repo1' || inputs.service == 'both' }}
+    uses: anicolaebujitsu/repo1/.github/workflows/release.yaml@main
+    with:
+      ref: ${{ inputs.ref }}
+
+  repo2:
+    name: Release Frontend (repo2)
+    # 👇 Key part: dependency logic
+    if: ${{ inputs.service == 'repo2' || inputs.service == 'both' }}
+    needs: repo1
+    uses: anicolaebujitsu/repo2/.github/workflows/release.yaml@main
+    with:
+      ref: ${{ inputs.ref }}
