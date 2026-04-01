@@ -1,38 +1,36 @@
-name: Central Release Orchestrator
+name: Orchestrate Releases
 
 on:
   workflow_dispatch:
     inputs:
-      service:
-        description: "Which service to release?"
-        required: true
-        type: choice
-        options:
-          - repo1
-          - repo2
-          - both
-      ref:
-        description: "Git ref (branch, tag, or commit SHA)"
-        required: true
-        default: "main"
-
-permissions:
-  contents: write
-  actions: read
+      deploy_repo1:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo1"
+      deploy_repo2:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo2"
 
 jobs:
-  repo1:
-    name: Release Backend (repo1)
-    if: ${{ inputs.service == 'repo1' || inputs.service == 'both' }}
-    uses: anicolaebujitsu/repo1/.github/workflows/release.yml@main
-    with:
-      ref: ${{ inputs.ref }}
+  orchestrate:
+    runs-on: ubuntu-latest
 
-  repo2:
-    name: Release Frontend (repo2)
-    # 👇 Key part: dependency logic
-    if: ${{ inputs.service == 'repo2' || inputs.service == 'both' }}
-    needs: repo1
-    uses: anicolaebujitsu/repo2/.github/workflows/release.yml@main
-    with:
-      ref: ${{ inputs.ref }}
+    steps:
+      - name: Trigger repo1 release
+        if: ${{ inputs.deploy_repo1 }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/anicolaebujitsu/repo1/dispatches \
+            -d '{"event_type": "trigger-release"}'
+
+      - name: Trigger repo2 release
+        if: ${{ inputs.deploy_repo2 }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/anicolaebujitsu/repo2/dispatches \
+            -d '{"event_type": "trigger-release"}'
