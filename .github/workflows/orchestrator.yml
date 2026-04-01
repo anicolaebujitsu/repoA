@@ -24,7 +24,7 @@ jobs:
   repo1:
     name: Release Backend (repo1)
     if: ${{ inputs.service == 'repo1' || inputs.service == 'both' }}
-    uses: anicolaebujitsu/repo1/.github/workflows/release.yaml@main
+    uses: anicolaebujitsu/repo1/.github/workflows/release.yml@main
     with:
       ref: ${{ inputs.ref }}
 
@@ -33,6 +33,6 @@ jobs:
     # 👇 Key part: dependency logic
     if: ${{ inputs.service == 'repo2' || inputs.service == 'both' }}
     needs: repo1
-    uses: anicolaebujitsu/repo2/.github/workflows/release.yaml@main
+    uses: anicolaebujitsu/repo2/.github/workflows/release.yml@main
     with:
       ref: ${{ inputs.ref }}
