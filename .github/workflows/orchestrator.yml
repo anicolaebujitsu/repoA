@@ -11,6 +11,10 @@ on:
         type: boolean
         default: false
         description: "Trigger release workflow in repo2"
+      deploy_repo3:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo3"
       branch:
         description: "Branch to deploy"
         type: choice
@@ -39,4 +43,13 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/anicolaebujitsu/repo2/dispatches \
+            -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}"}}'
+
+      - name: Trigger repo3 release
+        if: ${{ inputs.deploy_repo3 }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/anicolaebujitsu/repo3/dispatches \
             -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}"}}'
