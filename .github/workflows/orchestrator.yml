@@ -12,8 +12,6 @@ on:
         default: false
         description: "Trigger release workflow in repo2"
       branch:
-        type: string
-        default: "main"
         description: "Branch to deploy"
         type: choice
         options:
