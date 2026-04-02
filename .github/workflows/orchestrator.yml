@@ -15,6 +15,7 @@ on:
         type: string
         default: "main"
         description: "Branch to deploy"
+        type: choice
         options:
           - main
           - branch2
