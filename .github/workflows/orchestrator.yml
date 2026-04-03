@@ -59,4 +59,4 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/anicolaebujitsu/repo3/dispatches \
-            -d '{"event_type": "trigger-release-${{ steps.version.outputs.version }}", "client_payload": {"branch": "${{ inputs.branch }}", "version": "${{ steps.version.outputs.version }}"}}'
+            -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}", "version": "${{ steps.version.outputs.version }}"}}'
