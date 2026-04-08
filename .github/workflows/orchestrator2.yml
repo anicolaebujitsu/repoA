@@ -43,7 +43,7 @@ jobs:
           - repo: repo4
             enabled: ${{ inputs.deploy_repo4 }}
 
-    if: ${{ inputs[matrix.enabled] || github.event_name == 'schedule' }}
+    if: ${{ matrix.enabled || github.event_name == 'schedule' }}
     steps:
 
       - name: Checkout orchestrator repository
