@@ -43,8 +43,10 @@ jobs:
           - repo: repo4
             enabled: ${{ inputs.deploy_repo4 }}
 
-    if: ${{ matrix.enabled || github.event_name == 'schedule' }}
     steps:
+      - name: Skip if repo not selected
+        if: ${{ !matrix.enabled && github.event_name != 'schedule' }}
+        run: echo "Skipping ${{ matrix.repo }} because it is disabled" && exit 0
 
       - name: Checkout orchestrator repository
         uses: actions/checkout@v4
