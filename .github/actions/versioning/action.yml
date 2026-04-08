@@ -12,6 +12,7 @@ inputs:
 outputs:
   version:
     description: "Computed version string"
+    value: ${{ steps.compute.outputs.version }}
 
 runs:
   using: "composite"
@@ -44,7 +45,3 @@ runs:
 
         VERSION="$TODAY.$(printf "%02d" $COUNT)"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-    - name: Set output
-      shell: bash
-      run: echo "version=${{ steps.compute.outputs.version }}" >> $GITHUB_OUTPUT
