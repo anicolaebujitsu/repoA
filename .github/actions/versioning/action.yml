@@ -11,14 +11,14 @@ inputs:
 
 outputs:
   version:
-    description: "Computed version string"
     value: ${{ steps.compute.outputs.version }}
 
 runs:
   using: "composite"
   steps:
-    - name: Get last version
-      id: last
+
+    - name: Get last workflow run
+      id: last_run
       shell: bash
       run: |
         RESPONSE=$(curl -s \
@@ -26,18 +26,35 @@ runs:
           -H "Accept: application/vnd.github+json" \
           "https://api.github.com/repos/${{ inputs.repo }}/actions/runs?event=repository_dispatch&per_page=1")
 
-        LAST_VERSION=$(echo "$RESPONSE" | jq -r '.workflow_runs[0].display_title' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}' || echo "")
-        echo "last=$LAST_VERSION" >> $GITHUB_OUTPUT
+        RUN_ID=$(echo "$RESPONSE" | jq -r '.workflow_runs[0].id')
+        echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
+
+    - name: Get job name from last run
+      id: last_job
+      shell: bash
+      run: |
+        if [ -z "${{ steps.last_run.outputs.run_id }}" ] || [ "${{ steps.last_run.outputs.run_id }}" = "null" ]; then
+          echo "last_version=" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        JOBS=$(curl -s \
+          -H "Authorization: Bearer ${{ inputs.token }}" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/${{ inputs.repo }}/actions/runs/${{ steps.last_run.outputs.run_id }}/jobs")
+
+        LAST_VERSION=$(echo "$JOBS" | jq -r '.jobs[0].name' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}' || echo "")
+        echo "last_version=$LAST_VERSION" >> $GITHUB_OUTPUT
 
     - name: Compute next version
       id: compute
       shell: bash
       run: |
         TODAY=$(date +'%Y-%m-%d')
-        LAST="${{ steps.last.outputs.last }}"
+        LAST="${{ steps.last_job.outputs.last_version }}"
 
         if [[ "$LAST" == "$TODAY"* ]]; then
-          COUNT=$(echo $LAST | awk -F. '{print $2}')
+          COUNT=$(echo "$LAST" | awk -F. '{print $2}')
           COUNT=$((COUNT+1))
         else
           COUNT=1
