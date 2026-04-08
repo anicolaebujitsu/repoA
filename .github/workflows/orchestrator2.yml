@@ -65,7 +65,7 @@ jobs:
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/anicolaebujitsu/{{ matrix.repo }}/dispatches \
+            https://api.github.com/repos/anicolaebujitsu/${{ matrix.repo }}/dispatches \
             -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}", "version": "${{ steps.version.outputs.version }}"}}'
 
       - name: summary
