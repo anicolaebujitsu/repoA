@@ -35,12 +35,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-        
-      - name: generate version
-        id: version
-        run: |
-          VERSION=$(date +'%Y-%m-%d-%H%M%S')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # - name: generate version
+      #   id: version
+      #   run: |
+      #     VERSION=$(date +'%Y-%m-%d-%H%M%S')
+      #     echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Trigger repo1 release
         if: ${{ inputs.deploy_repo1 }}
