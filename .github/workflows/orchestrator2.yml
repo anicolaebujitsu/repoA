@@ -34,16 +34,16 @@ jobs:
       matrix:
         include:
           - repo: repo1
-            flag: deploy_repo1
-
+            enabled: ${{ inputs.deploy_repo1 }}
+            
           - repo: repo2
-            flag: deploy_repo2
+            enabled: ${{ inputs.deploy_repo2 }}
           - repo: repo3
-            flag: deploy_repo3
+            enabled: ${{ inputs.deploy_repo3 }}
           - repo: repo4
-            flag: deploy_repo4
+            enabled: ${{ inputs.deploy_repo4 }}
 
-    if: ${{ inputs[matrix.flag] || github.event_name == 'schedule' }}
+    if: ${{ inputs[matrix.enabled] || github.event_name == 'schedule' }}
     steps:
 
       - name: Checkout orchestrator repository
