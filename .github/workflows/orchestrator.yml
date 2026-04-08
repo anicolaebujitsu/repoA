@@ -65,6 +65,14 @@ jobs:
             https://api.github.com/repos/anicolaebujitsu/repo3/dispatches \
             -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}", "version": "${{ steps.version.outputs.version }}"}}'
 
+      - name: Compute version for repo4
+        id: version_repo4
+        uses: ./.github/actions/versioning
+        with:
+          repo: anicolaebujitsu/repo4
+          token: ${{ secrets.PAT_BVIS }}
+
+
 
       - name: Trigger repo4 release
         if: ${{ inputs.deploy_repo4 }}
