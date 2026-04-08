@@ -1,0 +1,70 @@
+name: Orchestrate Matrix Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_repo1:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo1"
+      deploy_repo2:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo2"
+      deploy_repo3:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo3"
+      deploy_repo4:
+        type: boolean
+        default: false
+        description: "Trigger release workflow in repo4"
+      branch:
+        description: "Branch to deploy"
+        type: choice
+        options:
+          - main
+          - branch2
+
+jobs:
+  orchestrate:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - repo: repo1
+            flag: deploy_repo1
+
+          - repo: repo2
+            flag: deploy_repo2
+          - repo: repo3
+            flag: deploy_repo3
+          - repo: repo4
+            flag: deploy_repo4
+
+    if: ${{ inputs[matrix.flag] || github.event_name == 'schedule' }}
+    steps:
+
+      - name: Checkout orchestrator repository
+        uses: actions/checkout@v4
+
+      - name: Compute version
+        id: version
+        uses: ./.github/actions/versioning
+        with:
+          repo: anicolaebujitsu/${{ matrix.repo }}
+          token: ${{ secrets.PAT_BVIS }}
+
+
+      - name: Trigger release
+        if: ${{ inputs.deploy_repo1 }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/anicolaebujitsu/{{ matrix.repo }}/dispatches \
+            -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}", "version": "${{ steps.version.outputs.version }}"}}'
+
+      - name: summary
+        run: echo "Triggered ${{ matrix.repo }} with version ${{ steps.version.outputs.version }}"
