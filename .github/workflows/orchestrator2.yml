@@ -44,14 +44,16 @@ jobs:
             enabled: ${{ inputs.deploy_repo4 }}
 
     steps:
-      - name: Skip if repo not selected
-        if: ${{ !matrix.enabled && github.event_name != 'schedule' }}
-        run: echo "Skipping ${{ matrix.repo }} because it is disabled" && exit 0
+      # - name: Skip if repo not selected
+      #   if: ${{ !matrix.enabled && github.event_name != 'schedule' }}
+      #   run: echo "Skipping ${{ matrix.repo }} because it is disabled" && exit 0
 
       - name: Checkout orchestrator repository
+        if: ${{ matrix.enabled || github.event_name == 'schedule' }}
         uses: actions/checkout@v4
 
       - name: Compute version
+        if: ${{ matrix.enabled || github.event_name == 'schedule' }}
         id: version
         uses: ./.github/actions/versioning
         with:
@@ -60,7 +62,7 @@ jobs:
 
 
       - name: Trigger release
-        if: ${{ inputs.deploy_repo1 }}
+        if: ${{ matrix.enabled || github.event_name == 'schedule' }}
         run: |
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.PAT_BVIS }}" \
@@ -69,4 +71,5 @@ jobs:
             -d '{"event_type": "trigger-release", "client_payload": {"branch": "${{ inputs.branch }}", "version": "${{ steps.version.outputs.version }}"}}'
 
       - name: summary
+        if: ${{ matrix.enabled || github.event_name == 'schedule' }}
         run: echo "Triggered ${{ matrix.repo }} with version ${{ steps.version.outputs.version }}"
