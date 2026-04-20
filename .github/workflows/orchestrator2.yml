@@ -6,6 +6,7 @@ on:
       section_microservices:
         type: string
         description: " --- Microservices --- "
+        default: "Select BVIS Microservices"
       deploy_repo1:
         type: boolean
         default: false
@@ -18,6 +19,7 @@ on:
       section_frontends:
         type: string
         description: " --- Frontends --- "
+        default: "Select BVIS Frontends"
       deploy_repo3:
         type: boolean
         default: false
@@ -30,6 +32,7 @@ on:
       section_all:
         type: string
         description: "--- All ---"
+        default: "Select all BVIS Components"
 
       deploy_all:
         type: boolean
