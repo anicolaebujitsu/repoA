@@ -3,41 +3,51 @@ name: Orchestrate Matrix Releases
 on:
   workflow_dispatch:
     inputs:
-      section_microservices:
-        type: string
-        description: " --- Microservices --- "
-        default: "Select BVIS Microservices"
-      deploy_repo1:
-        type: boolean
-        default: false
-        description: "Trigger release workflow in repo1"
-      deploy_repo2:
-        type: boolean
-        default: false
-        description: "Trigger release workflow in repo2"
+      # section_microservices:
+      #   type: string
+      #   description: " --- Microservices --- "
+      #   default: "Select BVIS Microservices"
+      # deploy_repo1:
+      #   type: boolean
+      #   default: false
+      #   description: "Trigger release workflow in repo1"
+      # deploy_repo2:
+      #   type: boolean
+      #   default: false
+      #   description: "Trigger release workflow in repo2"
       
-      section_frontends:
-        type: string
-        description: " --- Frontends --- "
-        default: "Select BVIS Frontends"
-      deploy_repo3:
-        type: boolean
-        default: false
-        description: "Trigger release workflow in repo3"
-      deploy_repo4:
-        type: boolean
-        default: false
-        description: "Trigger release workflow in repo4"
+      # section_frontends:
+      #   type: string
+      #   description: " --- Frontends --- "
+      #   default: "Select BVIS Frontends"
+      # deploy_repo3:
+      #   type: boolean
+      #   default: false
+      #   description: "Trigger release workflow in repo3"
+      # deploy_repo4:
+      #   type: boolean
+      #   default: false
+      #   description: "Trigger release workflow in repo4"
 
-      section_all:
-        type: string
-        description: "--- All ---"
-        default: "Select all BVIS Components"
+      # section_all:
+      #   type: string
+      #   description: "--- All ---"
+      #   default: "Select all BVIS Components"
 
-      deploy_all:
-        type: boolean
-        default: false
-        description: "Trigger all release workflows"
+      # deploy_all:
+      #   type: boolean
+      #   default: false
+      #   description: "Trigger all release workflows"
+      repos:
+        type: choice
+        description: "Select repos to deploy"
+        multiple: true
+        options:
+          - repo1
+          - repo2
+          - repo3
+          - repo4
+          - all
       branch:
         description: "Branch to deploy"
         type: choice
