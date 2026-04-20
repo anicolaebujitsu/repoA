@@ -5,8 +5,7 @@ on:
     inputs:
       section_microservices:
         type: string
-        default: "--- Microservices ---"
-        description: " "
+        description: " --- Microservices --- "
       deploy_repo1:
         type: boolean
         default: false
@@ -18,8 +17,7 @@ on:
       
       section_frontends:
         type: string
-        default: "--- Frontends ---"
-        description: " "
+        description: " --- Frontends --- "
       deploy_repo3:
         type: boolean
         default: false
@@ -32,7 +30,7 @@ on:
       section_all:
         type: string
         description: "--- All ---"
-        default: " "
+
       deploy_all:
         type: boolean
         default: false
