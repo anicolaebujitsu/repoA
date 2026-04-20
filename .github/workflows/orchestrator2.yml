@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       section_microservices:
-      type: string
-      default: "--- Microservices ---"
-      description: " "
+        type: string
+        default: "--- Microservices ---"
+        description: " "
       deploy_repo1:
         type: boolean
         default: false
