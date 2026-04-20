@@ -19,6 +19,10 @@ on:
         type: boolean
         default: false
         description: "Trigger release workflow in repo4"
+      deploy_all:
+        type: boolean
+        default: false
+        description: "Trigger all release workflows"
       branch:
         description: "Branch to deploy"
         type: choice
@@ -34,14 +38,14 @@ jobs:
       matrix:
         include:
           - repo: repo1
-            enabled: ${{ inputs.deploy_repo1 }}
+            enabled: ${{ inputs.deploy_repo1 || inputs.deploy_all }}
             
           - repo: repo2
-            enabled: ${{ inputs.deploy_repo2 }}
+            enabled: ${{ inputs.deploy_repo2 || inputs.deploy_all }}
           - repo: repo3
-            enabled: ${{ inputs.deploy_repo3 }}
+            enabled: ${{ inputs.deploy_repo3 || inputs.deploy_all }}
           - repo: repo4
-            enabled: ${{ inputs.deploy_repo4 }}
+            enabled: ${{ inputs.deploy_repo4 || inputs.deploy_all }}
 
     steps:
       # - name: Skip if repo not selected
