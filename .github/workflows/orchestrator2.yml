@@ -3,6 +3,10 @@ name: Orchestrate Matrix Releases
 on:
   workflow_dispatch:
     inputs:
+      section_microservices:
+      type: string
+      default: "--- Microservices ---"
+      description: " "
       deploy_repo1:
         type: boolean
         default: false
@@ -11,6 +15,11 @@ on:
         type: boolean
         default: false
         description: "Trigger release workflow in repo2"
+      
+      section_frontends:
+        type: string
+        default: "--- Frontends ---"
+        description: " "
       deploy_repo3:
         type: boolean
         default: false
@@ -19,6 +28,11 @@ on:
         type: boolean
         default: false
         description: "Trigger release workflow in repo4"
+
+      section_all:
+        type: string
+        description: "--- All ---"
+        default: " "
       deploy_all:
         type: boolean
         default: false
